@@ -9,4 +9,4 @@ def ttn_handler(msg,client):
     print("receive data from "+msg.dev_id)
     print(msg)
 
-handler = ttn.HandlerClient(config["TTN"]["apikey"])
+handler = ttn.HandlerClient(config["TTN"]["appid"],config["TTN"]["apikey"])
