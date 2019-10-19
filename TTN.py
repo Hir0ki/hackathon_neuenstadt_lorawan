@@ -28,7 +28,7 @@ print(influx)
 mqtt_client = handler.data()
 mqtt_client.set_uplink_callback(ttn_handler)
 mqtt_client.connect()
-time.sleep(10000) 
+while True: time.sleep(1)
 mqtt_client.close()
 
 
