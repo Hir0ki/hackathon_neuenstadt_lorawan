@@ -35,21 +35,3 @@ class InfluxDB:
         print(json_body)
         self.client.write_points(json_body)
 
-
-
-
-
-
-
-
-
-
-
-# 
-
-
-
-# a = client.get_list_database()
-# print(a)
-# b = client.query("SELECT Temperatur, Luftdruck  from Sensor_1;")
-# print(b)
