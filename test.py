@@ -5,13 +5,51 @@ import configparser
 config = configparser.ConfigParser()
 config.read("config.ini")
 
-username = config["INFLUXDB"]["influxdbuser"]
-password = config["INFLUXDB"]["influxdbpasswd"]
-hostname = config["INFLUXDB"]["influxdbhostname"]
-port = config["INFLUXDB"]["influxdbport"]
-database = config["INFLUXDB"]["influxdbdatabase"]
+class InfluxDB:
+    def __init__(self, config):
+        self.username = config["INFLUXDB"]["influxdbuser"]
+        self.password = config["INFLUXDB"]["influxdbpasswd"]
+        self.hostname = config["INFLUXDB"]["influxdbhostname"]
+        self.port = config["INFLUXDB"]["influxdbport"]
+        self.database = config["INFLUXDB"]["influxdbdatabase"]
+        self.client = influxdb.InfluxDBClient(host=self.hostname, port=self.port, username=self.username, password=self.password, database=self.database, ssl=True)
 
-client = influxdb.InfluxDBClient(host=hostname, port=port, username=username, password=password, database=database)
+    def send(self, measurement, time, Temperatur, Luftfeuchtigkeit, Luftdruck):
+        
+        json_body = [
+        {
+            "measurement": "Sensor_1",
+            "tags": {
+                "host": "server01",
+                "region": "us-west"
+            },
+            "time": time,
+            "fields": {
+                "Temperatur": float(Temperatur),
+                "Luftfeuchtigkeit": float(Luftfeuchtigkeit),
+                "Luftdruck": float(Luftdruck)
+
+            }
+        }
+    ]        
+        print(json_body)
+        self.client.write_points(json_body)
 
 
 
+
+
+
+
+
+
+
+
+# 
+
+
+
+# a = client.get_list_database()
+# print(a)
+# b = client.query("SELECT Temperatur, Luftdruck  from Sensor_1;")
+# print(b)

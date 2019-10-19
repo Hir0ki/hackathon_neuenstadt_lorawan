@@ -1,5 +1,7 @@
 import ttn 
 import configparser
+import time
+import test
 
 config = configparser.ConfigParser()
 config.read("config.ini")
@@ -7,18 +9,29 @@ config.read("config.ini")
 
 def ttn_handler(msg,client):
     print("receive data from "+msg.dev_id)
-    print(msg)
+    Time = msg.metadata.time
+    Temperature = msg.payload_fields.temperature
+    Humidity = msg.payload_fields.humidity
+    Pressure = msg.payload_fields.pressure
+    print(Time)
+    print(Temperature)
+    print(Humidity)
+    print(Pressure)
+
+    influx.send("Sensor_1",Time,Temperature,Humidity,Pressure)
+    print("tests")
 
 handler = ttn.HandlerClient(config["TTN"]["appid"],config["TTN"]["apikey"])
 
+influx = test.InfluxDB(config)
+print(influx)
 mqtt_client = handler.data()
-mqtt_client.set_uplink_callback(uplink_callback)
+mqtt_client.set_uplink_callback(ttn_handler)
 mqtt_client.connect()
-time.sleep(60)
+time.sleep(10000) 
 mqtt_client.close()
 
-app_client =  handler.application()
-my_app = app_client.get()
-print(my_app)
-my_devices = app_client.devices()
-print(my_devices)
+
+
+print("closing client")
+
